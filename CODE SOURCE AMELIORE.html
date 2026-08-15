@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arcoforme Construction SARL | Construire avec vision</title>
+    <style>
+        body { margin: 0; font-family: 'Segoe UI', Arial, sans-serif; line-height: 1.6; color: #333; background-color: #f4f4f4; }
+        
+        /* En-tête (Header) */
+        header {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            padding: 20px 40px;
+            background: #ffffff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .logo-container {
+            grid-column: 2;
+            text-align: center;
+        }
+
+        .logo-container img {
+            height: 90px;
+            width: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .nav-buttons {
+            grid-column: 3;
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 10px 15px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 13px;
+            transition: opacity 0.3s;
+        }
+
+        .nav-btn:hover { opacity: 0.85; }
+
+        .btn-accueil { background-color: #333; }
+        .btn-activite { background-color: #0056b3; }
+        .btn-contact { background-color: #28a745; }
+        
+        /* Bouton 4 suspendu (grisé et non cliquable) */
+        .btn-admin-suspendu { 
+            background-color: #cccccc !important; 
+            color: #666666 !important; 
+            cursor: not-allowed !important; 
+            opacity: 0.6; 
+        }
+
+        /* Gestion de l'affichage des sections */
+        .page-section {
+            display: none;
+            padding: 50px 20px;
+            max-width: 1000px;
+            margin: 20px auto;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .page-section.active {
+            display: block;
+        }
+
+        .hero { 
+            text-align: center; 
+            padding: 50px 20px; 
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), #111; 
+            color: #fff; 
+            border-radius: 8px; 
+            margin-bottom: 30px; 
+        }
+
+        .hero h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+        }
+
+        .hero p.slogan {
+            font-size: 1.2em;
+            color: #f0ad4e;
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+
+        /* Message d'accueil pour les clients */
+        .welcome-message {
+            background: #e9f7ef;
+            border-left: 5px solid #28a745;
+            padding: 20px;
+            border-radius: 6px;
+            margin-bottom: 30px;
+            font-size: 1.05em;
+            color: #155724;
+        }
+
+        .welcome-message h3 {
+            margin-top: 0;
+            color: #155724;
+        }
+        
+        /* Grille des réalisations */
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+            gap: 25px; 
+            margin-top: 30px; 
+        }
+        
+        .realisation-card { 
+            background: #fdfdfd; 
+            border: 1px solid #e1e1e1; 
+            border-radius: 8px; 
+            overflow: hidden; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            text-align: center;
+            padding-bottom: 15px;
+        }
+
+        .realisation-card img {
+            width: 100%;
+            height: 250px;
+            object-fit: contain;
+            background-color: #111;
+            display: block;
+        }
+
+        .realisation-card h3 {
+            font-size: 1.1em;
+            margin: 15px 15px 5px 15px;
+            color: #111;
+        }
+
+        .realisation-card p {
+            font-size: 0.9em;
+            color: #666;
+            margin: 0 15px;
+        }
+
+        .contact-info-box {
+            margin: 20px 0; 
+            background: #f9f9f9; 
+            padding: 20px; 
+            border-radius: 6px; 
+            border-left: 4px solid #0056b3;
+        }
+
+        .contact-info-box a {
+            color: #0056b3;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .contact-info-box a:hover {
+            text-decoration: underline;
+        }
+
+        .social-buttons { 
+            display: flex; 
+            gap: 15px; 
+            margin-top: 20px; 
+            flex-wrap: wrap; 
+        }
+        
+        .social-btn { 
+            display: inline-flex; 
+            align-items: center; 
+            padding: 12px 20px; 
+            border-radius: 6px; 
+            color: white; 
+            text-decoration: none; 
+            font-weight: bold; 
+            font-size: 14px; 
+            transition: transform 0.2s; 
+        }
+        
+        .social-btn:hover { transform: scale(1.05); }
+        
+        .logo-icon { 
+            width: 22px; 
+            height: 22px; 
+            margin-right: 10px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-weight: bold; 
+            font-size: 14px; 
+            border-radius: 3px; 
+            background: rgba(255,255,255,0.2); 
+        }
+        
+        .btn-wa { background-color: #25D366; }
+
+        /* Équipe dirigeante & dynamique */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+        
+        .team-card {
+            background: #fdfdfd;
+            border: 1px solid #e1e1e1;
+            border-radius: 8px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .team-card img {
+            width: 160px;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin: 0 auto 15px auto;
+            border: 4px solid #0056b3;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            display: block;
+        }
+
+        .team-card h3 {
+            margin: 10px 0 5px 0;
+            color: #111;
+            font-size: 1.25em;
+        }
+
+        .team-role {
+            color: #0056b3;
+            font-weight: bold;
+            font-size: 1.05em;
+            margin-bottom: 15px;
+        }
+
+        .leader-form {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #e1e1e1;
+            margin-top: 15px;
+            text-align: left;
+        }
+
+        .leader-form h4 {
+            margin: 0 0 10px 0;
+            font-size: 0.95em;
+            color: #333;
+            text-align: center;
+        }
+
+        .leader-form label {
+            display: block;
+            margin-top: 8px;
+            font-weight: bold;
+            font-size: 0.85em;
+        }
+
+        .leader-form input, .leader-form textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 3px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 0.9em;
+        }
+
+        .btn-leader-submit {
+            margin-top: 10px;
+            width: 100%;
+            padding: 8px;
+            background: #0056b3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+
+        .btn-leader-submit:hover { background: #004085; }
+
+        .admin-login-box, .admin-panel {
+            background: #fff;
+            padding: 20px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+        }
+        .admin-panel { display: none; }
+
+        form label { display: block; margin-top: 15px; font-weight: bold; }
+        form input, form textarea, form select { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        .btn-submit { margin-top: 20px; padding: 12px 25px; background: #28a745; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; }
+        .btn-submit:hover { background: #218838; }
+
+        footer { text-align: center; padding: 20px; background: #333; color: #fff; margin-top: 40px; }
+    </style>
+</head>
+<body>
+
+    <!-- En-tête -->
+    <header>
+        <div></div>
+        <div class="logo-container">
+            <a href="#" onclick="showSection('accueil')"><img src="logo.png" alt="Arcoforme Construction"></a>
+        </div>
+        <div class="nav-buttons">
+            <button class="nav-btn btn-accueil" onclick="showSection('accueil')">Accueil</button>
+            <button class="nav-btn btn-activite" onclick="showSection('activite')">Activité</button>
+            <button class="nav-btn btn-contact" onclick="showSection('contact')">Contact</button>
+            <!-- 4ème bouton suspendu -->
+            <button class="nav-btn btn-admin-suspendu" disabled title="Espace temporairement suspendu">Espace 2 Chefs (Suspendu)</button>
+        </div>
+    </header>
+
+    <!-- SECTION ACCUEIL -->
+    <div id="accueil" class="page-section active">
+        <div class="hero">
+            <h1>ARCOFORME Construction SARL</h1>
+            <p class="slogan">"Construire avec vision"</p>
+        </div>
+
+        <!-- Texte d'accueil chaleureux pour les clients -->
+        <div class="welcome-message">
+            <h3>Bienvenue chez Arcoforme Construction SARL !</h3>
+            <p>Nous sommes ravis de vous compter parmi nous. Que vous ayez un projet de construction résidentielle, un plan architectural sur mesure à concevoir, ou des besoins en ingénierie et en matériaux de qualité à Goma, notre équipe d'experts est prête à concrétiser vos ambitions avec rigueur et professionnalisme. Explorez nos réalisations et contactez-nous pour donner vie à votre vision !</p>
+        </div>
+
+        <h2>À propos de nous</h2>
+        <p>Fondée en 2024 et basée à <strong>Goma (RDC)</strong>, Arcoforme Construction SARL est une entreprise dynamique d'ingénierie et de construction de bâtiments spécialisée dans la conception architecturale et les travaux de structure.</p>
+        
+        <h3>Direction & Responsables</h3>
+        <div class="team-grid">
+            <!-- Directeur Général -->
+            <div class="team-card">
+                <div>
+                    <img src="image_2.png" alt="Architecte Mukandirwa Bahati Faradja">
+                    <h3>Architecte Mukandirwa Bahati Faradja</h3>
+                    <div class="team-role">Directeur Général (DG)</div>
+                    <p>Vision stratégique et supervision générale des projets.</p>
+                </div>
+                <div class="leader-form">
+                    <h4>Écrire au Directeur Général</h4>
+                    <form action="#" method="post" onsubmit="alert('Message envoyé au DG avec succès !'); return false;">
+                        <label>Nom :</label><input type="text" name="nom_dg" required>
+                        <label>Email :</label><input type="email" name="email_dg" required>
+                        <label>Message :</label><textarea name="message_dg" rows="2" required></textarea>
+                        <button type="submit" class="btn-leader-submit">Envoyer au DG</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Directeur Technique -->
+            <div class="team-card">
+                <div>
+                    <img src="image_3.png" alt="Ir Bwanga Julien">
+                    <h3>Ir BWANGA JULIEN</h3>
+                    <div class="team-role">Directeur Technique</div>
+                    <p>Supervision technique, ingénierie et coordination terrain.</p>
+                </div>
+                <div class="leader-form">
+                    <h4>Écrire au Directeur Technique</h4>
+                    <form action="#" method="post" onsubmit="alert('Message envoyé au DT avec succès !'); return false;">
+                        <label>Nom :</label><input type="text" name="nom_dt" required>
+                        <label>Email :</label><input type="email" name="email_dt" required>
+                        <label>Message :</label><textarea name="message_dt" rows="2" required></textarea>
+                        <button type="submit" class="btn-leader-submit">Envoyer au DT</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section dynamique où s'ajouteront les nouveaux agents -->
+        <h2 style="margin-top:40px;">Nos Autres Agents & Collaborateurs</h2>
+        <div id="agents-container" class="team-grid">
+            <p style="color: #666; font-style: italic;">Aucun autre agent enregistré pour le moment.</p>
+        </div>
+    </div>
+
+    <!-- SECTION ACTIVITÉ -->
+    <div id="activite" class="page-section">
+        <h1>Nos Réalisations & Chantiers</h1>
+        <div class="grid">
+            <div class="realisation-card"><img src="image_1.png" alt="Chantier"><h3>Chantier & Activités</h3><p>Suivi terrain.</p></div>
+            <div class="realisation-card"><img src="image_4.png" alt="3D"><h3>Rendus 3D</h3><p>Design extérieur.</p></div>
+            <div class="realisation-card"><img src="image_5.png" alt="Coffrage"><h3>Coffrage d'Escaliers</h3><p>Sur mesure.</p></div>
+            <div class="realisation-card"><img src="image_6.png" alt="Menuiserie"><h3>Menuiserie Métallique</h3><p>Sécurisation.</p></div>
+            <div class="realisation-card"><img src="image_7.png" alt="Blocs"><h3>Production de Blocs</h3><p>Haute résistance.</p></div>
+            <div class="realisation-card"><img src="image_8.png" alt="Fondations"><h3>Fondations Solides</h3><p>Semelles.</p></div>
+            <div class="realisation-card"><img src="image_9.png" alt="Structure"><h3>Structure & Élévation</h3><p>Maçonnerie.</p></div>
+            <div class="realisation-card"><img src="image_10.png" alt="Projet"><h3>Projets Résidentiels</h3><p>Clés en main.</p></div>
+            <div class="realisation-card"><img src="image_11.png" alt="Poteaux"><h3>Poteaux Porteurs</h3><p>Béton armé.</p></div>
+            <div class="realisation-card"><img src="image_12.png" alt="Réalité"><h3>Virtuel au Réel</h3><p>Exécution.</p></div>
+            <div class="realisation-card"><img src="image_13.png" alt="Ferraillage"><h3>Ferraillage</h3><p>Précision.</p></div>
+            <div class="realisation-card"><img src="image_14.png" alt="Aménagements"><h3>Aménagements</h3><p>Extérieurs.</p></div>
+            <div class="realisation-card"><img src="image_15.png" alt="Dalle"><h3>Coulage de Dalle</h3><p>Gros œuvre.</p></div>
+            <div class="realisation-card"><img src="image_16.png" alt="Finitions"><h3>Finitions Modernes</h3><p>Détails.</p></div>
+            <div class="realisation-card"><img src="image_17.png" alt="Plans"><h3>Plans d'Architecture</h3><p>Technique.</p></div>
+            <div class="realisation-card"><img src="image_18.png" alt="Perspective"><h3>Conceptions 3D</h3><p>Façades.</p></div>
+        </div>
+    </div>
+
+    <!-- SECTION CONTACT -->
+    <div id="contact" class="page-section">
+        <h1>Contactez-nous</h1>
+        <div class="contact-info-box">
+            <p><strong>Téléphone / WhatsApp :</strong> <a href="https://wa.me/243995234098" target="_blank">+243 995 234 098</a></p>
+            <p><strong>Adresse :</strong> N°003, Avenue Bilati, Quartier Katoyi, Karisimbi, Goma, RDC</p>
+            <p><strong>Email :</strong> <a href="mailto:mukandirwahabati5@gmail.com">mukandirwahabati5@gmail.com</a></p>
+            <div class="social-buttons">
+                <a href="https://wa.me/243995234098" class="social-btn btn-wa" target="_blank"><span class="logo-icon">W</span>WhatsApp</a>
+            </div>
+        </div>
+        <form action="#" method="post" onsubmit="alert('Message envoyé avec succès !'); return false;">
+            <label>Nom complet :</label><input type="text" name="nom" required>
+            <label>Email :</label><input type="email" name="email" required>
+            <label>Message :</label><textarea name="message" rows="5" required></textarea>
+            <button type="submit" class="btn-submit">Envoyer le message</button>
+        </form>
+    </div>
+
+    <footer>
+        <p>Arcoforme Construction SARL | Goma, RDC</p>
+    </footer>
+
+    <script>
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('.page-section');
+            sections.forEach(sec => sec.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
+
